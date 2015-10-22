@@ -1701,6 +1701,18 @@ func (c *Connection) BulkUpload(uploadPath string, dataStream io.Reader, format 
 	return
 }
 
+func (c *Connection) ObjectMeta(container string, objectName string) (int, http.Header, error) {
+	var resp *http.Response
+	resp, _, err := c.storage(RequestOpts{
+		Container:  container,
+		ObjectName: objectName,
+		Operation:  "HEAD",
+		ErrorMap:   objectErrorMap,
+		NoResponse: true,
+	})
+	return resp.StatusCode, resp.Header, err
+}
+
 // Object returns info about a single object including any metadata in the header.
 //
 // May return ObjectNotFound.
